@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6月份自媒體陪跑課程</title>
+    <style>
+        :root {
+            --primary-green: #5b7056; 
+            --light-green: #f2f5f1;
+            --accent-gold: #b8862b;
+            --bg-cream: #faf6f0;      /* 柔和燕麥底色 */
+            --dark-text: #333d32;
+        }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: -apple-system, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+            background-color: #ede5da; /* 網頁外圍沙灘色 */
+            margin: 0; padding: 0;
+            display: flex; justify-content: center;
+        }
+
+        .container {
+            width: 100%; max-width: 500px;
+            background: var(--bg-cream); 
+            min-height: 100vh;
+            box-shadow: 0 0 40px rgba(91, 112, 86, 0.15);
+            padding-bottom: 110px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ================= 網頁純內建 SVG 葉子背景裝飾 ================= */
+        .leaf-decor {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.22; 
+        }
+        .leaf-top-left { top: 10px; left: -10px; width: 90px; }
+        .leaf-top-right { top: 80px; right: -15px; width: 75px; transform: scaleX(-1) rotate(15deg); }
+        .leaf-mid-left { top: 45%; left: -20px; width: 85px; transform: rotate(-10deg); }
+        .leaf-bottom-right { bottom: 120px; right: -10px; width: 95px; transform: scaleX(-1) rotate(-5deg); }
+
+        /* 頂部手寫風小愛心 */
+        .top-heart {
+            font-size: 26px; color: #a97762; text-align: center; margin-top: 35px; margin-bottom: -15px; opacity: 0.8;
+            position: relative; z-index: 2;
+        }
+
+        .main-content {
+            flex: 1; display: flex; flex-direction: column; justify-content: center; 
+            padding: 10px 0; position: relative; z-index: 2;
+        }
+
+        /* 標題區塊優化：提升文字層次感 */
+        .intro-section { padding: 30px 25px; text-align: center; }
+        .intro-section h1 { color: var(--primary-green); font-size: 26px; margin-bottom: 6px; font-weight: bold; letter-spacing: 1.5px; }
+        .intro-tagline { font-size: 14px; color: var(--accent-gold); font-weight: bold; margin-bottom: 20px; letter-spacing: 0.5px; }
+        .intro-section p { margin: 0; color: #616b60; font-size: 13px; line-height: 1.6; font-weight: bold; }
+
+        /* 課程卡片排版 */
+        .week-list { padding: 0 30px; }
+        .week-card {
+            background: #ffffff; border: 1px solid #dfdacd;
+            border-radius: 20px; padding: 20px; margin-bottom: 20px;
+            cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; box-shadow: 0 4px 15px rgba(91, 112, 86, 0.03);
+            transition: all 0.25s ease;
+        }
+        .week-card:active { background: var(--light-green); transform: scale(0.98); }
+
+        .week-badge {
+            background: var(--primary-green); color: #fff;
+            padding: 6px 14px; border-radius: 12px; font-weight: bold; font-size: 13px;
+        }
+        .week-info { font-size: 14px; color: var(--dark-text); margin-left: 12px; font-weight: bold; }
+        .btn-label { color: var(--primary-green); font-weight: bold; font-size: 13px; opacity: 0.8; }
+
+        /* 質感雙線價格框 */
+        .price-info-clickable { 
+            text-align: center; margin: 20px 30px; padding: 22px 20px; 
+            background: #ffffff; border-radius: 20px; 
+            border: 1.5px solid var(--accent-gold); outline: 3px solid #ffffff; outline-offset: -5px;
+            cursor: pointer; transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(91, 112, 86, 0.04);
+        }
+        .price-info-clickable:active { background: var(--light-green); }
+
+        /* 底部固定懸浮按鈕 */
+        .footer-action-bar {
+            position: fixed; bottom: 0; width: 100%; max-width: 500px;
+            background: rgba(250, 246, 240, 0.96); 
+            padding: 15px 30px 25px 30px;
+            box-shadow: 0 -8px 25px rgba(91, 112, 86, 0.06);
+            backdrop-filter: blur(6px); z-index: 999;
+            border-top: 1px solid #ede9e0;
+        }
+        .reg-btn-bottom {
+            display: block; background: var(--primary-green); color: #fff; 
+            text-align: center; padding: 15px; border-radius: 30px;
+            text-decoration: none; font-weight: bold; font-size: 16px;
+            letter-spacing: 1.5px; box-shadow: 0 4px 14px rgba(91, 112, 86, 0.25);
+            transition: background 0.2s;
+        }
+        .reg-btn-bottom:hover { background: #485944; }
+
+        /* 彈窗 Modal */
+        #modalOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(51, 61, 50, 0.65); display: none; 
+            justify-content: center; align-items: center; z-index: 9999; padding: 20px;
+        }
+        .modal-content {
+            background: #fff; width: 100%; max-width: 400px;
+            border-radius: 28px; padding: 32px 24px; position: relative;
+            border: 2px solid var(--primary-green);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        .close-btn { position: absolute; top: 15px; right: 22px; font-size: 28px; color: #ccc; cursor: pointer; }
+        .m-date { color: var(--primary-green); font-weight: bold; font-size: 13px; }
+        .m-title { font-size: 21px; font-weight: bold; margin: 8px 0 14px 0; color: var(--dark-text); }
+        .m-desc { background: var(--bg-cream); padding: 18px; border-radius: 18px; font-size: 14px; line-height: 1.7; white-space: pre-line; margin-bottom: 22px; color: #4a5349; border: 1px solid #ede9e0; }
+        .reg-btn { display: block; background: var(--primary-green); color: #fff; text-align: center; padding: 14px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <svg class="leaf-decor leaf-top-left" viewBox="0 0 100 100" fill="none" stroke="#5b7056" stroke-width="1.5"><path d="M10,90 Q30,50 80,10 M80,10 Q50,40 10,90 M80,10 C70,25 45,35 25,60 C40,45 60,35 80,10 M40,65 Q25,55 15,58 M40,65 Q50,75 48,85 M60,40 Q50,28 38,28 M60,40 Q72,48 82,45" stroke-linecap="round"/></svg>
+    <svg class="leaf-decor leaf-top-right" viewBox="0 0 100 100" fill="none" stroke="#5b7056" stroke-width="1.5"><path d="M10,90 Q40,60 70,20 M70,20 Q45,45 10,90 M40,60 Q25,45 30,35 M55,40 Q65,25 60,15 M30,73 Q15,70 12,60" stroke-linecap="round"/></svg>
+    <svg class="leaf-decor leaf-mid-left" viewBox="0 0 100 100" fill="none" stroke="#5b7056" stroke-width="1.5"><path d="M10,80 C30,60 50,30 80,20 C60,40 30,70 10,80 M45,48 Q35,30 22,35 M60,33 Q55,15 42,18" stroke-linecap="round"/></svg>
+    <svg class="leaf-decor leaf-bottom-right" viewBox="0 0 100 100" fill="none" stroke="#5b7056" stroke-width="1.5"><path d="M10,90 Q30,50 80,10 M80,10 Q50,40 10,90 M80,10 C70,25 45,35 25,60 C40,45 60,35 80,10" stroke-linecap="round"/></svg>
+
+    <div class="top-heart">🤎</div>
+    
+    <div class="main-content">
+        <div class="intro-section">
+            <h1>6 月份自媒體陪跑計畫</h1>
+            <div class="intro-tagline">「自媒體不是一個人的戰鬥，而是一群人的陪伴。」</div>
+            <p>給自己一個月，帶你打通公域引流到私域變現的閉環 ✨<br>點擊下方日期查看每週課綱，一同翻轉品牌影響力！</p>
+        </div>
+
+        <div class="week-list">
+            <div class="week-card" onclick="showDetail(1)">
+                <div style="display:flex; align-items:center;">
+                    <div class="week-badge">第一週</div>
+                    <div class="week-info">6/04 (四) 19:00 - 20:30</div>
+                </div>
+                <div class="btn-label">簡介 ➔</div>
+            </div>
+
+            <div class="week-card" onclick="showDetail(2)">
+                <div style="display:flex; align-items:center;">
+                    <div class="week-badge">第二週</div>
+                    <div class="week-info">6/11 (四) 19:00 - 20:30</div>
+                </div>
+                <div class="btn-label">簡介 ➔</div>
+            </div>
+
+            <div class="week-card" onclick="showDetail(3)">
+                <div style="display:flex; align-items:center;">
+                    <div class="week-badge">第三週</div>
+                    <div class="week-info">6/18 (四) 19:00 - 20:30</div>
+                </div>
+                <div class="btn-label">簡介 ➔</div>
+            </div>
+
+            <div class="week-card" onclick="showDetail(4)">
+                <div style="display:flex; align-items:center;">
+                    <div class="week-badge">第四週</div>
+                    <div class="week-info">6/25 (四) 19:00 - 20:30</div>
+                </div>
+                <div class="btn-label">簡介 ➔</div>
+            </div>
+        </div>
+
+        <div class="price-info-clickable" onclick="window.open('https://www.surveycake.com/s/3XlRN', '_blank')">
+            <span style="font-size: 15px; font-weight: bold; color: var(--dark-text);">單堂單點 $150 │ 一次包月四堂優惠價 <span style="color:var(--accent-gold); font-size:18px;">$500</span></span><br>
+            <span style="font-size: 13px; color: var(--primary-green); font-weight: bold; margin-top: 5px; display: inline-block;">➔ 點擊直接預約超值方案</span>
+        </div>
+    </div>
+
+    <div class="footer-action-bar">
+        <a href="https://www.surveycake.com/s/3XlRN" target="_blank" class="reg-btn-bottom">立即報名6月份陪跑</a>
+    </div>
+</div>
+
+<div id="modalOverlay" onclick="closeDetail()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-btn" onclick="closeDetail()">&times;</span>
+        <div class="m-date" id="mDate"></div>
+        <div class="m-title" id="mTitle"></div>
+        <div class="m-desc" id="mDesc"></div>
+        <a href="https://www.surveycake.com/s/3XlRN" class="reg-btn">立即填表報名</a>
+    </div>
+</div>
+
+<script>
+    const data = {
+        1: { date: "6/4 (四) 19:00 - 20:30", title: "🎯 自媒體精準定位", desc: "🌿 本週精選內容：\n1. 挖掘個人核心優勢，找出變現關鍵\n2. 打造一眼吸睛的 IG/Threads 質感個人檔案\n3. 設定黃金 30 天內容與成長藍圖規劃\n\n先做好定位，後面經營才輕鬆！" },
+        2: { date: "6/11 (四) 19:00 - 20:30", title: "🎬 爆款短影音腳本", desc: "🌿 本週精選內容：\n1. 黃金 3 秒吸睛法則與留存率指標大拆解\n2. 高互動、高收藏的「對話式」文案技巧\n3. 實用腳本公式套用，半小時產出一週量" },
+        3: { date: "6/18 (四) 19:00 - 20:30", title: "✂️ 高效短影音剪輯", desc: "🌿 本週精選內容：\n1. 手機 CapCut 實戰快剪與流暢卡點\n2. 提升影片質感的色調調校與精選 BGM\n3. 打造高點閱率、具個人辨識度的視覺封面" },
+        4: { date: "6/25 (四) 19:00 - 20:30", title: "🤝 私域流量與變現", desc: "🌿 本週精選內容：\n1. 透過精準限動與社群，創造高互動黏著\n2. 將公域流量無縫引導至你的 LINE 私人社域\n3. 打通自媒體變現的最後一公里路" }
+    };
+
+    function showDetail(id) {
+        document.getElementById('mDate').innerText = data[id].date;
+        document.getElementById('mTitle').innerText = data[id].title;
+        document.getElementById('mDesc').innerText = data[id].desc;
+        document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    function closeDetail() {
+        document.getElementById('modalOverlay').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
